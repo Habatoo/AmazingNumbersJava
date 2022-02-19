@@ -1,12 +1,21 @@
 package numbers;
 
-import java.util.Scanner;
+import java.util.*;
 import java.util.StringJoiner;
 
 public class Main {
     static Scanner scanner = new Scanner(System.in);
     static long number;
     static long count;
+    static String property;
+    static String[] propertyArray = new String[]{
+            "BUZZ",
+            "DUCK",
+            "PALINDROMIC",
+            "GAPFUL",
+            "SPY",
+            "EVEN",
+            "ODD"};
     static String[] requestParts;
 
     public static void main(String[] args) {
@@ -24,13 +33,13 @@ public class Main {
                 if (result == -1) {
                     System.out.println("The first parameter should be a natural number or zero.");
                 } else if (result == 0) {
-                    System.out.println("Goodbye! ");
+                    System.out.println("Goodbye!");
                     break;
                 } else {
                     number = Long.parseLong(requestParts[0], 10);
                     showFirstScenarioResult();
                 }
-            } else {
+            } else if (scenario == 2) {
                 int resultFirst = isNatural(requestParts[0]);
                 int resultSecond = isNatural(requestParts[1]);
                 if (resultFirst == 0) {
@@ -48,6 +57,73 @@ public class Main {
                         number++;
                     }
                 }
+            } else if (scenario == 3) {
+                int resultFirst = isNatural(requestParts[0]);
+                int resultSecond = isNatural(requestParts[1]);
+                boolean resultThird = isInProperty(requestParts[2]);
+
+                if (resultFirst == 0) {
+                    System.out.println("Goodbye! ");
+                    break;
+                } else if (resultFirst == -1){
+                    System.out.println("The first parameter should be a natural number or zero.");
+                } else if (resultSecond == -1){
+                    System.out.println("The second parameter should be a natural number.");
+                } else if (!resultThird){
+                    System.out.printf("The property [%s]  is wrong.\n", requestParts[2].toUpperCase());
+                    System.out.println("Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, EVEN, ODD]");
+                } else {
+                    number = Long.parseLong(requestParts[0], 10);
+                    count = Long.parseLong(requestParts[1], 10);
+                    property = requestParts[2];
+                    while (count > 0) {
+                        switch (property) {
+                            case ("EVEN"):
+                                if (!isOddOrEven()) {
+                                    showThirdScenarioResult();
+                                    count--;
+                                }
+                                break;
+                            case ("ODD"):
+                                if (isOddOrEven()) {
+                                    showThirdScenarioResult();
+                                    count--;
+                                }
+                                break;
+                            case ("SPY"):
+                                if (isSpy()) {
+                                    showThirdScenarioResult();
+                                    count--;
+                                }
+                                break;
+                            case ("GAPFUL"):
+                                if (isGapful()) {
+                                    showThirdScenarioResult();
+                                    count--;
+                                }
+                                break;
+                            case ("PALINDROMIC"):
+                                if (isPalindromic()) {
+                                    showThirdScenarioResult();
+                                    count--;
+                                }
+                                break;
+                            case ("DUCK"):
+                                if (isDuck()) {
+                                    showThirdScenarioResult();
+                                    count--;
+                                }
+                                break;
+                            case ("BUZZ"):
+                                if (isBuzz()) {
+                                    showThirdScenarioResult();
+                                    count--;
+                                }
+                                break;
+                        }
+                        number++;
+                    }
+                }
             }
         }
     }
@@ -59,21 +135,9 @@ public class Main {
         System.out.println("- enter two natural numbers to obtain the properties of the list:");
         System.out.println("  * the first parameter represents a starting number;");
         System.out.println("  * the second parameter shows how many consecutive numbers are to be printed;");
+        System.out.println("- two natural numbers and a property to search for;");
         System.out.println("- separate the parameters with one space;");
         System.out.println("- enter 0 to exit.\n");
-    }
-
-    private static void showSecondScenarioResult() {
-        StringJoiner joiner = new StringJoiner(", ");
-        if (isOddOrEven()) joiner.add("even");
-        if (!isOddOrEven()) joiner.add("odd");
-        if (isBuzz()) joiner.add("buzz");
-        if (isDuck()) joiner.add("duck");
-        if (isPalindromic()) joiner.add("palindromic");
-        if (isGapful()) joiner.add("gapful");
-        String result = joiner.toString().trim();
-
-        System.out.printf("\t%d is %s\n", number, result);
     }
 
     private static void showFirstScenarioResult() {
@@ -82,17 +146,51 @@ public class Main {
         System.out.printf("\tduck:\t%b\n", isDuck());
         System.out.printf("\tpalindromic:\t%b\n", isPalindromic());
         System.out.printf("\tgapful:\t%b\n", isGapful());
+        System.out.printf("\tspy:\t%b\n", isSpy());
         System.out.printf("\teven:\t%b\n", !isOddOrEven());
         System.out.printf("\todd:\t%b\n", isOddOrEven());
+    }
+
+    private static void showSecondScenarioResult() {
+        StringJoiner joiner = new StringJoiner(", ");
+        if (isOddOrEven()) joiner.add("even");
+        if (!isOddOrEven()) joiner.add("odd");
+        if (isBuzz()) joiner.add("buzz");
+        if (isDuck()) joiner.add("duck");
+        if (isSpy()) joiner.add("spy");
+        if (isPalindromic()) joiner.add("palindromic");
+        if (isGapful()) joiner.add("gapful");
+        String result = joiner.toString().trim();
+        System.out.printf("\t%d is %s\n", number, result);
+    }
+
+    private static void showThirdScenarioResult() {
+        StringJoiner joiner = new StringJoiner(", ");
+        if (isOddOrEven()) joiner.add("even");
+        if (!isOddOrEven()) joiner.add("odd");
+        if (isBuzz()) joiner.add("buzz");
+        if (isDuck()) joiner.add("duck");
+        if (isSpy()) joiner.add("spy");
+        if (isPalindromic()) joiner.add("palindromic");
+        if (isGapful()) joiner.add("gapful");
+        String result = joiner.toString().trim();
+
+        System.out.printf("\t%d is %s\n", number, result);
     }
 
     private static int chooseScenario() {
         int scenario = 1;
         requestParts = scanner.nextLine().split(" ");
-        if (requestParts.length > 1) {
+        if (requestParts.length == 2) {
             scenario = 2;
+        } else if (requestParts.length == 3) {
+            scenario = 3;
         }
         return scenario;
+    }
+
+    private static boolean isInProperty(String string) {
+        return Arrays.stream(propertyArray).anyMatch(string.toUpperCase()::equals);
     }
 
     private static int isNatural(String string) {
@@ -160,4 +258,23 @@ public class Main {
         }
         return gapful;
     }
+
+    private static boolean isSpy(){
+        boolean spy = true;
+        long n = number;
+        long sum = 0L;
+        long mul = 1L;
+
+        if (number >= 10) {
+            while(n > 0) {
+                sum += n % 10;
+                mul *= n % 10;
+                n /= 10;
+            }
+            spy = sum == mul ? true : false;
+        }
+
+        return spy;
+    }
+
 }
